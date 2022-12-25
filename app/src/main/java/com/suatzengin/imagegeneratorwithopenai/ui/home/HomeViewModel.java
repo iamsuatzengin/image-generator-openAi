@@ -63,7 +63,7 @@ public class HomeViewModel extends ViewModel {
     }
 
     public void load(String prompt) {
-        if (prompt == null || prompt.isEmpty()) {
+        if (prompt.isEmpty() || (prompt.startsWith(" ") && prompt.contains(" "))) {
             errorTextField.postValue("The prompt must not be empty!");
             return;
         }
@@ -78,7 +78,7 @@ public class HomeViewModel extends ViewModel {
                             setIsLoading(false);
                             images.postValue(item.getData());
                         }, throwable -> {
-                            message.postValue("Check your internet connection!");
+                            message.postValue("Error: " + throwable.getLocalizedMessage());
                             setIsLoading(false);
                         })
         );
@@ -111,10 +111,6 @@ public class HomeViewModel extends ViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
-        if (disposable != null) disposable.dispose();
-    }
-
-    public void onClear() {
         if (disposable != null) disposable.dispose();
     }
 }
